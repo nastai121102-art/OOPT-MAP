@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_Легенда" data-name="Легенда" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 14.03 13.87">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #d7173c;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+        stroke: #1d1d1b;
+        stroke-miterlimit: 10;
+        stroke-width: .15px;
+      }
+
+      .cls-6 {
+        fill: #c1bddf;
+        fill-rule: evenodd;
+        stroke: #6c4897;
+        stroke-linecap: square;
+        stroke-linejoin: bevel;
+        stroke-width: .75px;
+      }
+
+      .cls-2 {
+        fill: #e29329;
+      }
+
+      .cls-3 {
+        fill: #b7172f;
+      }
+
+      .cls-4 {
+        fill: #a7a6ac;
+      }
+
+      .cls-5 {
+        fill: #eab25c;
+      }
+    </style>
+    <symbol id="_Природный_рекреационный" data-name="Природный рекреационный" viewBox="0 0 13.51 13.51">
+      <g>
+        <path class="cls-6" d="M13.13,6.75c0,3.52-2.86,6.38-6.38,6.38S.38,10.28.38,6.75,3.23.38,6.75.38s6.38,2.86,6.38,6.38" vector-effect="none"/>
+        <g>
+          <g>
+            <g>
+              <polygon class="cls-4" points="7.17 6.61 7.17 5.23 6.75 5.23 6.34 5.23 6.34 6.61 6.75 6.61 7.17 6.61"/>
+              <path class="cls-4" d="M4.39,10.92v-1.8h-.83v1.8c0,.23.19.42.42.42s.42-.19.42-.42Z"/>
+              <path class="cls-4" d="M9.53,11.33c.23,0,.42-.19.42-.42v-1.8h-.83v1.8c0,.23.19.42.42.42Z"/>
+              <path class="cls-1" d="M10.96,4.6c-.42-.72-1.02-1.33-1.74-1.76-.74-.44-1.59-.67-2.46-.67s-1.72.23-2.46.67c-.72.43-1.32,1.03-1.74,1.76-.07.13-.07.29,0,.42.07.13.21.21.36.21h7.69c.15,0,.29-.08.36-.21.07-.13.07-.29,0-.42Z"/>
+            </g>
+            <path class="cls-5" d="M10.08,6.61H3.42c-.23,0-.42.19-.42.42v1.66c0,.23.19.42.42.42h6.66c.23,0,.42-.19.42-.42v-1.66c0-.23-.19-.42-.42-.42Z"/>
+          </g>
+          <path class="cls-3" d="M4.29,2.84c-.72.43-1.32,1.03-1.74,1.76-.07.13-.07.29,0,.42.07.13.21.21.36.21h3.85v-3.05c-.87,0-1.72.23-2.46.67Z"/>
+          <path class="cls-2" d="M6.34,6.61h-2.91c-.23,0-.42.19-.42.42v1.66c0,.23.19.42.42.42h3.33v-2.5h-.42Z"/>
+        </g>
+      </g>
+    </symbol>
+  </defs>
+  <use width="13.51" height="13.51" transform="translate(.26 .21)" xlink:href="#_Природный_рекреационный"/>
+</svg>

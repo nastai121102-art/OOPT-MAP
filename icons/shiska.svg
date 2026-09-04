@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_Легенда" data-name="Легенда" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 14.03 13.87">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f19c37;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        stroke: #1d1d1b;
+        stroke-miterlimit: 10;
+        stroke-width: .25px;
+      }
+
+      .cls-2 {
+        fill: #b65332;
+      }
+
+      .cls-3 {
+        fill: #603914;
+      }
+
+      .cls-4 {
+        fill: #ee7c32;
+      }
+
+      .cls-5 {
+        fill: #d7562a;
+      }
+
+      .cls-6 {
+        fill: #f5bb39;
+      }
+
+      .cls-7 {
+        fill: #fac9b8;
+        fill-rule: evenodd;
+        stroke: #b41b1f;
+        stroke-linecap: square;
+        stroke-linejoin: bevel;
+        stroke-width: .75px;
+      }
+    </style>
+    <symbol id="_Бор" data-name="Бор" viewBox="0 0 13.51 13.51">
+      <g>
+        <path class="cls-7" d="M13.13,6.75c0,3.52-2.86,6.38-6.38,6.38S.38,10.28.38,6.75,3.23.38,6.75.38s6.38,2.86,6.38,6.38" vector-effect="none"/>
+        <g>
+          <path class="cls-2" d="M6.69,11.27v-.75c.01-1.66,1.37-3.01,3.03-3h.75s0,.76,0,.76c0,1.66-1.36,3.01-3.03,3h-.75Z"/>
+          <path class="cls-2" d="M3.03,8.24v-.75s.76,0,.76,0c1.66,0,3.01,1.36,3,3.03v.75s-.76,0-.76,0c-1.66,0-3.01-1.36-3-3.03Z"/>
+          <path class="cls-3" d="M7.16,12.22h-.75s0-.95,0-.95h.75s0,.95,0,.95Z"/>
+          <path class="cls-6" d="M6.83,1.29c1.05,1.36,1.03,3.55-.02,4.9-1.05-1.36-1.03-3.55.02-4.9Z"/>
+          <path class="cls-1" d="M6.81,6.75v-1.32c.01-1.14.94-2.07,2.09-2.06h.57s0,1.32,0,1.32c0,1.14-.94,2.07-2.08,2.06h-.57Z"/>
+          <path class="cls-1" d="M4.18,4.67v-1.32s.57,0,.57,0c1.14,0,2.07.94,2.06,2.08v1.32s-.57,0-.57,0c-1.14,0-2.07-.94-2.06-2.08Z"/>
+          <path class="cls-4" d="M6.8,8.83v-.75c.01-1.46,1.2-2.63,2.65-2.62h.75s0,.76,0,.76c0,1.46-1.19,2.63-2.65,2.62h-.75Z"/>
+          <path class="cls-4" d="M3.42,6.17v-.75s.76,0,.76,0c1.46,0,2.63,1.19,2.62,2.65v.75s-.76,0-.76,0c-1.46,0-2.63-1.19-2.62-2.65Z"/>
+          <path class="cls-2" d="M6.82,4.16c1.28,1.31,1.27,3.41-.02,4.71-1.28-1.31-1.27-3.41.02-4.71Z"/>
+          <path class="cls-5" d="M6.78,11.23l-.53-.54c-1.17-1.18-1.16-3.09.02-4.26l.54-.53.53.54c1.17,1.18,1.16,3.09-.02,4.26l-.54.53Z"/>
+        </g>
+      </g>
+    </symbol>
+  </defs>
+  <use width="13.51" height="13.51" transform="translate(.24 .12)" xlink:href="#_Бор"/>
+</svg>
