@@ -6,6 +6,48 @@
   <title>ООПТ Архангельской области — Интерактивная карта</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
+    .fullscreen-btn {
+  position: absolute;
+  top: 16px;
+  right: 60px; /* рядом с бургером */
+  z-index: 1002;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fullscreen-btn:hover {
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+@media (max-width: 480px) {
+  .fullscreen-btn { right: 16px; top: 70px; } /* на очень узких экранах чуть ниже */
+}
+
+    /* Затемнение фона при открытом меню */
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Чтобы карта не перекрывалась, а меню было чётко сверху */
+#map-wrapper {
+  z-index: 1; /* оставляем как есть */
+}
+
     :root {
       --primary: #2c5aa0;
       --accent: #4caf50;
@@ -97,11 +139,13 @@
       flex-direction: column;
       gap: 4px;
     }
+    
     .hamburger-line { width: 22px; height: 2px; background-color: var(--primary); }
     .hamburger-btn.active .hamburger-line:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
     .hamburger-btn.active .hamburger-line:nth-child(2) { opacity: 0; }
     .hamburger-btn.active .hamburger-line:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
 
+    
     /* Боковое меню */
     .sidebar-menu {
       position: fixed;
@@ -404,6 +448,7 @@
   </style>
 </head>
 <body>
+  <div class="overlay" id="overlay"></div>
 <!-- SVG-паттерн для диагональных полосок охранной зоны -->
 <svg width="0" height="0" style="position:absolute;" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -456,6 +501,13 @@
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
       </button>
+      <!-- НОВАЯ кнопка полноэкранного режима (вставь сюда) -->
+  <button id="fullscreen-btn" class="fullscreen-btn" aria-label="Развернуть на весь экран">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M14 19H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2z"/>
+      <path d="M8 5v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2z"/>
+    </svg>
+  </button>
     </div>
 
     <div class="sidebar-menu">
@@ -1108,19 +1160,29 @@
 
     // Бургер-меню
     const hamburger = document.querySelector('.hamburger-btn');
-    const sidebar = document.querySelector('.sidebar-menu');
-    const closeBtn = document.querySelector('.close-menu-btn');
+const sidebar = document.querySelector('.sidebar-menu');
+const overlay = document.getElementById('overlay');
+const closeBtn = document.querySelector('.close-menu-btn');
 
-    if (hamburger && sidebar && closeBtn) {
-      hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        sidebar.classList.add('open');
-      });
-      closeBtn.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        sidebar.classList.remove('open');
-      });
-    }
+function toggleMenu() {
+  const isOpen = sidebar.classList.contains('open');
+  if (!isOpen) {
+    sidebar.classList.add('open');
+    overlay.classList.add('active');
+    // Блокируем прокрутку страницы, когда открыто меню
+    document.body.style.overflow = 'hidden';
+  } else {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+hamburger.addEventListener('click', toggleMenu);
+closeBtn.addEventListener('click', toggleMenu);
+// Закрывать по клику на затемнение
+overlay.addEventListener('click', toggleMenu);
+
 
     // Фильтры по статусу
     setupFilterButton('federal');
@@ -1425,6 +1487,38 @@
   function closeOooptDetailsPanel() {
     document.getElementById('ooopt-details-panel').classList.add('closed');
   }
+  const fsBtn = document.getElementById('fullscreen-btn');
+let isFullscreen = false;
+
+fsBtn.addEventListener('click', () => {
+  if (!isFullscreen) {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
+});
+
+// Отслеживаем выход из полноэкранного режима, чтобы сбросить состояние
+document.addEventListener('fullscreenchange', () => {
+  isFullscreen = !!document.fullscreenElement;
+});
+document.addEventListener('webkitfullscreenchange', () => {
+  isFullscreen = !!document.webkitFullscreenElement;
+});
+
 </script>
 </body>
 </html>
