@@ -6,27 +6,61 @@
   <title>ООПТ Архангельской области — Интерактивная карта</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    .fullscreen-btn {
-  position: absolute;
-  top: 16px;
-  right: 60px; /* рядом с бургером */
-  z-index: 1002;
+
+    .map-fullscreen-mode {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100vh !important;
+  z-index: 9999;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.map-fullscreen-mode ~ * {
+  display: none;
+}
+
+.exit-fs-btn {
   background: rgba(255,255,255,0.9);
   border: 1px solid rgba(0,0,0,0.1);
-  border-radius: 8px;
-  padding: 10px 12px;
+  border-radius: 4px;
+  padding: 6px 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+.exit-fs-btn:hover {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+
+.fullscreen-btn {
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #333;
+  line-height: 1;
+}
+
 .fullscreen-btn:hover {
   background: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-@media (max-width: 480px) {
-  .fullscreen-btn { right: 16px; top: 70px; } /* на очень узких экранах чуть ниже */
-}
+
+
+
+
 
     /* Затемнение фона при открытом меню */
 .overlay {
@@ -147,23 +181,32 @@
 
     
     /* Боковое меню */
-    .sidebar-menu {
-      position: fixed;
-      top: 0;
-      right: -320px;
-      width: 300px;
-      max-height: calc(100vh - 20px);
-      background: #fff;
-      box-shadow: -4px 0 16px rgba(0,0,0,0.1);
-      z-index: 2000;
-      padding: 15px 20px 15px;
-      transition: right 0.35s cubic-bezier(0.68,-0.55,0.27,1.55);
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      overflow-y: auto;
-    }
-    .sidebar-menu.open { right: 0; }
+.sidebar-menu {
+  position: fixed;
+  top: 0;
+  right: -320px; /* Увеличиваем смещение */
+  width: 300px;
+  max-height: calc(100vh - 20px);
+  background: #fff;
+  box-shadow: -4px 0 16px rgba(0,0,0,0.1);
+  z-index: 2000;
+  padding: 15px 20px 15px;
+  transition: right 0.35s cubic-bezier(0.68,-0.55,0.27,1.55);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  
+  /* Добавляем это: */
+  transform: translateX(100%); /* Дополнительное смещение */
+  backface-visibility: hidden; /* Для плавной анимации */
+}
+
+.sidebar-menu.open {
+  right: 0;
+  transform: translateX(0); /* Возвращаем на место при открытии */
+}
+
     .sidebar-menu h3 { margin: 0 0 16px 0; color: var(--primary); font-size: 1.3rem; }
     .sidebar-menu a {
       display: block;
@@ -494,20 +537,17 @@
     <p>Наведите курсор, чтобы увидеть название ООПТ. Кликните, чтобы открыть профиль и площадь.</p>
 
     <div id="map-wrapper">
-      <div id="map"></div>
+  <div id="map"></div>
 
-      <button class="hamburger-btn" aria-label="Открыть меню" aria-expanded="false">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
-      <!-- НОВАЯ кнопка полноэкранного режима (вставь сюда) -->
-  <button id="fullscreen-btn" class="fullscreen-btn" aria-label="Развернуть на весь экран">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M14 19H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2z"/>
-      <path d="M8 5v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2z"/>
-    </svg>
+  <!-- Бургер-кнопка остается на месте -->
+  <button class="hamburger-btn" aria-label="Открыть меню" aria-expanded="false">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
   </button>
+
+</div>
+    
     </div>
 
     <div class="sidebar-menu">
@@ -1139,6 +1179,42 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     map = L.map('map').setView([64.0, 40.0], 6);
+        window.map = map;
+
+        // Создаём контейнер для кнопок
+    const zoomContainer = document.querySelector('.leaflet-control-zoom');
+    if (zoomContainer) {
+        // Кнопка включения полноэкранного режима
+        const toggleFsBtn = document.createElement('button');
+        toggleFsBtn.id = 'toggle-fs-btn';
+        toggleFsBtn.className = 'fullscreen-btn leaflet-control-zoom-in';
+        toggleFsBtn.setAttribute('aria-label', 'Развернуть карту на весь экран');
+        toggleFsBtn.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 19H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2z"/>
+                <path d="M8 5v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2z"/>
+            </svg>
+        `;
+        
+        // Кнопка выхода из полноэкранного режима
+        const exitFsBtn = document.createElement('button');
+        exitFsBtn.id = 'exit-fs-btn';
+        exitFsBtn.className = 'fullscreen-btn leaflet-control-zoom-in';
+        exitFsBtn.style.display = 'none';
+        exitFsBtn.setAttribute('aria-label', 'Выйти из полноэкранного режима');
+        exitFsBtn.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6L18 18" />
+            </svg>
+        `;
+        
+        // Добавляем обе кнопки в контейнер зума
+        zoomContainer.appendChild(toggleFsBtn);
+        zoomContainer.appendChild(exitFsBtn);
+    }
+
+
+
 
     baseLayers.topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
       maxZoom: 17,
@@ -1487,37 +1563,38 @@ overlay.addEventListener('click', toggleMenu);
   function closeOooptDetailsPanel() {
     document.getElementById('ooopt-details-panel').classList.add('closed');
   }
-  const fsBtn = document.getElementById('fullscreen-btn');
-let isFullscreen = false;
 
-fsBtn.addEventListener('click', () => {
-  if (!isFullscreen) {
-    const elem = document.documentElement;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) {
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      elem.msRequestFullscreen();
-    }
+
+const mapWrapper = document.getElementById('map-wrapper');
+let isMapFullscreen = false;
+
+
+
+function toggleMapFullscreen() {
+  isMapFullscreen = !isMapFullscreen;
+  const toggleFsBtn = document.getElementById('toggle-fs-btn');
+  const exitFsBtn = document.getElementById('exit-fs-btn');
+
+  if (isMapFullscreen) {
+    mapWrapper.classList.add('map-fullscreen-mode');
+    if (exitFsBtn) exitFsBtn.style.display = 'flex';
+    if (toggleFsBtn) toggleFsBtn.style.display = 'none';
+    setTimeout(() => { window.map.invalidateSize(); }, 100);
   } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    }
+    mapWrapper.classList.remove('map-fullscreen-mode');
+    if (exitFsBtn) exitFsBtn.style.display = 'none';
+    if (toggleFsBtn) toggleFsBtn.style.display = 'flex';
+    setTimeout(() => { window.map.invalidateSize(); }, 100);
   }
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.closest('#toggle-fs-btn')) toggleMapFullscreen();
+  if (e.target.closest('#exit-fs-btn')) toggleMapFullscreen();
 });
 
-// Отслеживаем выход из полноэкранного режима, чтобы сбросить состояние
-document.addEventListener('fullscreenchange', () => {
-  isFullscreen = !!document.fullscreenElement;
-});
-document.addEventListener('webkitfullscreenchange', () => {
-  isFullscreen = !!document.webkitFullscreenElement;
-});
+
+
 
 </script>
 </body>
