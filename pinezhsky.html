@@ -6,181 +6,109 @@
   <title>ООПТ Пинежского района — Интерактивная карта</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
+  :root {
+    --primary: #2c5aa0;
+    --accent: #4caf50;
+    --bg-light: #f4f8fc;
+    --card-bg: #ffffff;
+    --text: #333333;
+  }
 
-.oopt-rules-list {
-  list-style-type: disc;
-  margin: 0 0 0 20px;
-  padding: 0;
-}
-.oopt-rules-list li {
-  margin-bottom: 6px;
-  font-size: 0.88rem;
-  color: #444;
-  line-height: 1.35;
-}
-.oopt-rules-block {
-  margin-top: 10px;
-  border-top: 1px solid #eee;
-  padding-top: 6px;
-}
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg-light);
+  }
 
+  a {
+    text-decoration: none;
+    color: var(--primary);
+  }
 
+  a:hover {
+    text-decoration: underline;
+  }
 
-.close-rules-btn:hover { color: #333; }
+  /* Контейнер ограничивает ширину всех блоков и центрирует их */
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+  }
 
+  /* Общие стили для всех блоков внутри wrapper */
+  .info-section,
+  .rules-section,
+  #map-wrapper {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
 
+  /* Стили для блока с историей */
+  .info-section {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 24px;
+     margin-top: 30px;
+  }
 
-    .info-section {
-  margin-top: 40px;
-  padding: 24px;
-  background: var(--card-bg);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
+  .info-section h2 {
+    margin: 0 0 20px 0;
+    color: var(--primary);
+  }
 
-.info-section h2 {
-  margin: 0 0 20px 0;
-  color: var(--primary);
-}
+  .info-section p {
+    margin: 12px 0;
+  }
 
-.info-section p {
-  margin: 12px 0;
-}
+  /* Стили для блока с правилами */
+  .rules-section {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 24px;
+  }
 
-    .rules-section {
-  margin-top: 40px;
-  padding: 24px;
-  background: var(--card-bg);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
+  .rules-section h2 {
+    margin: 0 0 20px 0;
+    color: var(--primary);
+  }
 
-.rules-section h2 {
-  margin: 0 0 20px 0;
-  color: var(--primary);
-}
+  .rules-section ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
 
-.rules-section ul {
-  list-style-type: disc;
-  margin-left: 20px;
-}
+  .rules-section li {
+    margin-bottom: 12px;
+  }
 
-.rules-section li {
-  margin-bottom: 12px;
-}
+  /* Стили для карты */
+  #map-wrapper {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    overflow: hidden;
+    background: #f5f5f5;
+  }
 
-.main-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 24px;
-  margin-top: 20px;
-  background: rgba(19, 69, 143, 0.8); /* Более светлый базовый цвет */
-  color: #fff;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
+  #map {
+    width: 100%;
+    height: 100%;
+  }
 
-.main-button:hover {
-  background: rgb(20, 57, 112); /* Более темный цвет при наведении */
-}
-
-.main-button svg {
-  margin-right: 8px;  
-  fill: #fff;
-}
-
-
-
-
-
-    .oopt-panel {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 320px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  padding: 16px;
-  z-index: 1002;
-  opacity: 1;
-  transition: opacity 0.3s ease;
-  pointer-events: auto;
-}
-.oopt-panel.closed {
-  opacity: 0;
-  pointer-events: none;
-}
-.close-panel-btn {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: #888;
-  cursor: pointer;
-}
-.close-panel-btn:hover { color: #333; }
-.oopt-panel h4 { margin: 0 0 12px 0; color: var(--primary); font-size: 1rem; }
-.oopt-profile-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.profile-item { display: flex; flex-direction: column; }
-.profile-label { font-size: 0.85rem; color: #666; margin-bottom: 4px; }
-.profile-value { font-weight: 600; color: var(--primary); }
-
-    :root {
-      --primary: #2c5aa0;
-      --accent: #4caf50;
-      --bg-light: #f4f8fc;
-      --card-bg: #ffffff;
-      --text: #333333;
-    }
-    body {
-      margin: 0; padding: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text); background: var(--bg-light);
-    }
-    a { text-decoration: none; color: var(--primary); }
-    a:hover { text-decoration: underline; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
-    header { padding: 2rem 0; text-align: center; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-    header h1 { margin: 0; font-size: 1.8rem; color: var(--primary); }
-    header p { margin-top: 0.5rem; color: #666; }
-
-    #map-wrapper {
-      position: relative; width: 100%; height: 600px;
-      border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-      margin-bottom: 3rem; overflow: hidden; background: #eef2f5;
-    }
-    #map { width: 100%; height: 100%; position: relative; z-index: 1; }
-
-    .legend-container {
-      position: absolute; bottom: 20px; left: 20px; z-index: 1000;
-      padding: 12px; background: rgba(255,255,255,0.98);
-      border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border: 1px solid #e0e0e0; max-width: 250px;
-    }
-    .legend-title {
-      margin: 0 0 12px 0; font-size: 14px; color: #2c5aa0;
-      font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-      border-bottom: 1px solid #eee; padding-bottom: 8px;
-    }
-    .legend-section-title {
-      margin: 10px 0 6px 0; font-size: 12px; color: #555;
-      font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .legend-group { display: flex; align-items: center; margin-bottom: 6px; font-size: 13px; color: #444; }
-    .legend-swatch { width: 18px; height: 18px; margin-right: 10px; flex-shrink: 0; border-radius: 2px; }
-    .legend-dot { width: 12px; height: 12px; margin-right: 10px; flex-shrink: 0; border-radius: 50%; border: 2px solid #fff; }
-
-    footer { padding: 2rem 1.5rem; text-align: center; color: #888; font-size: 0.9rem; border-top: 1px solid #e0e4e8; margin-top: 3rem; }
- /* === Легенда === */
+  /* Легенда (абсолютное позиционирование внутри карты) */
+  /* Стили для легенды */
 .legend-container {
   position: absolute;
   bottom: 20px;
@@ -189,167 +117,401 @@
   padding: 12px;
   background: rgba(255, 255, 255, 0.98);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   border: 1px solid #e0e0e0;
   max-width: 250px;
 }
-.legend-title {
-  margin: 0 0 12px 0;
-  font-size: 14px;
-  color: #2c5aa0;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
-}
-.legend-section-title {
-  margin: 12px 0 8px 0;
-  font-size: 12px;
-  color: #555;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: block;
-}
-.legend-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 6px;
+
+.legend-toggle {
+  display: none;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1001;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 10px 14px;
+  cursor: pointer;
   font-size: 13px;
-  color: #444;
-}
-.legend-group-2 {
-  display: flex;
+  font-weight: 600;
+  color: #2c5aa0;
   align-items: center;
-  margin-bottom: 6px;
-  font-size: 11px;
-  color: #444;
+  gap: 8px;
+  transition: background 0.2s ease;
 }
-.legend-icon-svg {
-  width: 18px;
-  height: 18px;
-  margin-right: 10px;
-  flex-shrink: 0;
-  display: inline-block;
+
+@media (max-width: 768px) {
+  .legend-toggle {
+    display: flex;
+  }
+  
+  .legend-container {
+    display: none;
+    bottom: 70px;
+    left: 20px;
+    right: 20px;
+    max-width: none;
+    max-height: 320px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .legend-container.show {
+    display: block;
+  }
 }
-.legend-icon-svg svg {
-  display: block;
-  width: 100%;
-  height: 100%;
+
+
+
+
+
+  .legend-title {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #2c5aa0;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+  }
+
+  .legend-section-title {
+    margin: 12px 0 8px 0;
+    font-size: 12px;
+    color: #555;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+  }
+
+  .legend-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #444;
+  }
+
+  .legend-group-2 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 11px;
+    color: #444;
+  }
+
+  .legend-icon-svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+
+  .legend-icon-svg svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .legend-icon-pattern {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #000;
+    background: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    color: #000;
+    border-radius: 0;
+  }
+
+  .legend-text {
+    line-height: 1.3;
+  }
+
+  .legend-icon-img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .legend-icon-img img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  /* Панель справа (если нужна) */
+  .oopt-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    padding: 16px;
+    z-index: 1002;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    pointer-events: auto;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .oopt-panel.closed {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .close-panel-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #888;
+    cursor: pointer;
+  }
+
+  .close-panel-btn:hover {
+    color: #333;
+  }
+
+  .oopt-panel h4 {
+    margin: 0 0 12px 0;
+    color: var(--primary);
+    font-size: 1rem;
+  }
+
+  .oopt-profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .profile-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .profile-label {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 4px;
+  }
+
+  .profile-value {
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  /* Кнопка */
+  .main-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    margin-top: 20px;
+    background: rgba(19, 69, 143, 0.8);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+  }
+
+  .main-button:hover {
+    background: rgb(20, 57, 112);
+  }
+
+  .main-button svg {
+    margin-right: 8px;
+    fill: #fff;
+  }
+
+  header {
+    padding: 2rem 0;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--primary);
+  }
+
+  header p {
+    margin-top: 0.5rem;
+    color: #666;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  footer {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    border-top: 1px solid #e0e4e8;
+    margin-top: 3rem;
+  }
+
+  /* Стили для списков правил (цветные галочки/крестики) */
+  .rules-allowed {
+    margin: 8px 0 12px 0;
+  }
+
+  .rules-allowed-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #2e7d32;
+    margin-bottom: 4px;
+  }
+
+  .oopt-rules-allowed {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .oopt-rules-allowed li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+    color: #2e7d32;
+    line-height: 1.35;
+  }
+
+  .oopt-rules-allowed li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #2e7d32;
+    font-weight: 700;
+  }
+
+  .rules-forbidden {
+    margin: 8px 0 12px 0;
+  }
+
+  .rules-forbidden-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #d32f2f;
+    margin-bottom: 4px;
+  }
+
+  .oopt-rules-forbidden {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .oopt-rules-forbidden li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+    color: #c62828;
+    line-height: 1.35;
+  }
+
+  .oopt-rules-forbidden li::before {
+    content: '✕';
+    position: absolute;
+    left: 0;
+    color: #d32f2f;
+    font-weight: 700;
+  }
+
+.pinega-buffer {
+  fill: url(#diag-stripes) !important;
+  stroke: #000000 !important;
+  stroke-width: 3px !important;
 }
-.legend-icon-pattern {
-  width: 18px;
-  height: 18px;
-  margin-right: 10px;
-  flex-shrink: 0;
-  display: inline-flex;
+
+/* Кнопка-переключатель легенды — скрыта на десктопе */
+.legend-toggle {
+  display: none;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1001;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c5aa0;
   align-items: center;
-  justify-content: center;
-  border: 2px solid #000;
+  gap: 8px;
+  transition: background 0.2s ease;
+}
+.legend-toggle svg {
+  flex-shrink: 0;
+}
+.legend-toggle:hover {
   background: #fff;
-  font-size: 10px;
-  font-weight: bold;
-  color: #000;
-  border-radius: 0;
-}
-.legend-text {
-  line-height: 1.3;
-}
-.legend-icon-img {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.legend-icon-img img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* Охранная зона Пинежского — диагональные полоски */
-    .pinega-buffer {
-      fill: url(#diag-stripes) !important;
-      stroke: #000000 !important;
-      stroke-width: 3px !important;
-    }
-
-/* Фиксированная высота панели с ползунком */
-.oopt-panel {
-  max-height: 400px;
-  overflow-y: auto;
+/* === Мобильные стили === */
+@media (max-width: 768px) {
+  .legend-toggle {
+    display: flex;
+  }
+  
+  .legend-container {
+    display: none;
+    position: absolute;
+    bottom: 70px;           /* чуть выше кнопки */
+    left: 20px;
+    right: 20px;
+    max-width: none;
+    max-height: 320px;       /* ограничиваем высоту */
+    overflow-y: auto;         /* ползунок, если контент длинный */
+    -webkit-overflow-scrolling: touch; /* плавный скролл на iOS */
+  }
+  
+  .legend-container.show {
+    display: block;
+  }
+  
+  .legend-group {
+    font-size: 12px;
+  }
+  
+  .legend-section-title {
+    font-size: 11px;
+  }
 }
 
-/* Разрешённые — зелёные */
-.rules-allowed {
-  margin: 8px 0 12px 0;
-}
-.rules-allowed-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #2e7d32;
-  margin-bottom: 4px;
-}
-.oopt-rules-allowed {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-.oopt-rules-allowed li {
-  position: relative;
-  padding-left: 20px;
-  margin-bottom: 4px;
-  font-size: 0.85rem;
-  color: #2e7d32;
-  line-height: 1.35;
-}
-.oopt-rules-allowed li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: #2e7d32;
-  font-weight: 700;
-}
+</style>
 
-/* Запрещённые — красные */
-.rules-forbidden {
-  margin: 8px 0 12px 0;
-}
-.rules-forbidden-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #d32f2f;
-  margin-bottom: 4px;
-}
-.oopt-rules-forbidden {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-.oopt-rules-forbidden li {
-  position: relative;
-  padding-left: 20px;
-  margin-bottom: 4px;
-  font-size: 0.85rem;
-  color: #c62828;
-  line-height: 1.35;
-}
-.oopt-rules-forbidden li::before {
-  content: '✕';
-  position: absolute;
-  left: 0;
-  color: #d32f2f;
-  font-weight: 700;
-}
-
-
-
-
- </style>
 
 </head>
 <body>
@@ -362,6 +524,8 @@
     </pattern>
   </defs>
 </svg>
+
+
 
 
 <header>
@@ -383,35 +547,33 @@
 
 
 
-<main class="container">
+<div class="content-wrapper">
   <section class="info-section">
-  <h2>О Пинежском муниципальном округе</h2>
-  
-  <p>Пинежский муниципальный округ — административно-территориальная единица в Архангельской области России. Округ известен своими природными богатствами и особо охраняемыми природными территориями.</p>
+    <h2>О Пинежском муниципальном округе</h2>
 
-  <h3>Основные характеристики:</h3>
-  <ul>
-    <li>Площадь территории: более 28 тысяч квадратных километров</li>
-    <li>Административный центр: село Карпогоры</li>
-    <li>Население: около 25 тысяч человек</li>
-    <li>Главная природная достопримечательность: Пинежский заповедник</li>
-  </ul>
+<p>Пинежский муниципальный округ — административно-территориальная единица в Архангельской области России. Округ известен своими природными богатствами и особо охраняемыми природными территориями.</p>
 
-  <h3>Природное наследие:</h3>
-  <p>Территория округа славится своими карстовыми ландшафтами, пещерами и уникальными лесными экосистемами. Здесь расположены:</p>
-  <ul>
-    <li>Пинежский государственный природный заповедник</li>
-    <li>Несколько государственных природных заказников</li>
-    <li>Сеть памятников природы</li>
-  </ul>
+<h3>Основные характеристики:</h3>
+<ul>
+<li>Площадь территории: более 28 тысяч квадратных километров</li>
+<li>Административный центр: село Карпогоры</li>
+<li>Население: около 25 тысяч человек</li>
+<li>Главная природная достопримечательность: Пинежский заповедник</li>
+</ul>
 
-  <h3>Историческое значение:</h3>
-  <p>Пинежье — древнейший земледельческий район Севера России, известный своими народными промыслами и культурным наследием.</p>
+<h3>Природное наследие:</h3>
+<p>Территория округа славится своими карстовыми ландшафтами, пещерами и уникальными лесными экосистемами. Здесь расположены:</p>
+<ul>
+<li>Пинежский государственный природный заповедник</li>
+<li>Несколько государственных природных заказников</li>
+<li>Сеть памятников природы</li>
+</ul>
+
+<h3>Историческое значение:</h3>
+<p>Пинежье — древнейший земледельческий район Севера России, известный своими народными промыслами и культурным наследием.</p>
 </section>
-
-<div class="container">
   <div class="rules-section">
-    <h2>Общие правила поведения на территории ООПТ</h2>
+    <h2>Общие правила поведения на территориях ООПТ</h2>
     <ul>
       <li>Соблюдать тишину и не пугать диких животных</li>
       <li>Не оставлять мусор</li>
@@ -420,91 +582,79 @@
       <li>Фотографировать можно только с разрешения администрации</li>
     </ul>
   </div>
-</div>
 
-
+  <!-- Карта теперь ВНУТРИ wrapper, поэтому она будет не шире 1100px -->
   <div id="map-wrapper">
-    <div id="map"></div>
-    <div class="legend-container">
-  <h4 class="legend-title">Условные обозначения</h4>
-
-  <!-- ФЕДЕРАЛЬНОГО ЗНАЧЕНИЯ -->
-  <div class="legend-section-title">Федерального значения</div>
-
-  <div class="legend-group">
-    <span class="legend-icon-svg">
-      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="1" width="16" height="16" fill="#d32f2f" stroke="#4caf50" stroke-width="2" stroke-dasharray="12 6" stroke-linecap="round" opacity="0.8"/>
-      </svg>
-    </span>
-    <span class="legend-text">ЗАПОВЕДНИКИ</span>
-  </div>
-
-  <!-- Охранная зона заповедника -->
-  <div class="legend-group">
-    <span class="legend-icon-pattern">//</span>
-    <span class="legend-text">Охранная зона заповедника Пинежский</span>
-  </div>
-
-  <!-- РЕГИОНАЛЬНОГО ЗНАЧЕНИЯ -->
-  <div class="legend-section-title" style="margin-top:12px;">Регионального значения</div>
-
-  <div class="legend-group">
-    <span class="legend-text">ЗАКАЗНИКИ</span>
-  </div>
-
-  <div class="legend-group">
-    <span class="legend-icon-svg">
-      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="1" width="16" height="16" fill="#934E71" fill-opacity="0.8" stroke="#d32f2f" stroke-width="2"/>
-      </svg>
-    </span>
-    <span class="legend-text">биологические</span>
-  </div>
-
-  <div class="legend-group">
-    <span class="legend-icon-svg">
-      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="1" width="16" height="16" fill="#FDC602" fill-opacity="0.8" stroke="#d32f2f" stroke-width="2"/>
-      </svg>
-    </span>
-    <span class="legend-text">ландшафтные</span>
-  </div>
-<div class="legend-group">
-  <span class="legend-icon-svg">
-    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-      <rect x="1" y="1" width="16" height="16" fill="#95817B" fill-opacity="0.8" stroke="#d32f2f" stroke-width="2"/>
+  <div id="map"></div>
+  
+  <!-- Кнопка переключения легенды -->
+  <button class="legend-toggle" id="legendToggle" aria-label="Показать/скрыть легенду">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <line x1="3" y1="9" x2="21" y2="9"/>
+      <line x1="9" y1="3" x2="9" y2="21"/>
     </svg>
-  </span>
-  <span class="legend-text">комплексный</span>
+    <span>Легенда</span>
+  </button>
+  
+  <!-- Основной контейнер легенды -->
+  <div class="legend-container" id="legendContainer">
+    <h4 class="legend-title">Условные обозначения</h4>
+    
+    <div class="legend-section-title">Федерального значения</div>
+    <div class="legend-group">
+      <span class="legend-icon-svg">
+        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="16" height="16" fill="#d32f2f" stroke="#4caf50" stroke-width="2" stroke-dasharray="12 6" stroke-linecap="round" opacity="0.8"/>
+        </svg>
+      </span>
+      <span class="legend-text">ЗАПОВЕДНИКИ</span>
+    </div>
+      <!-- Остальные пункты легенды -->
+      <div class="legend-group">
+        <span class="legend-icon-pattern">//</span>
+        <span class="legend-text">Охранная зона заповедника Пинежский</span>
+      </div>
+      <div class="legend-section-title" style="margin-top:12px;">Регионального значения</div>
+      <div class="legend-group"><span class="legend-text">ЗАКАЗНИКИ</span></div>
+      <div class="legend-group">
+        <span class="legend-icon-svg">
+          <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="16" height="16" fill="#934E71" fill-opacity="0.8" stroke="#d32f2f" stroke-width="2"/>
+          </svg>
+        </span>
+        <span class="legend-text">биологические</span>
+      </div>
+      <div class="legend-group">
+        <span class="legend-icon-svg">
+          <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="16" height="16" fill="#FDC602" fill-opacity="0.8" stroke="#d32f2f" stroke-width="2"/>
+          </svg>
+        </span>
+        <span class="legend-text">ландшафтные</span>
+      </div>
+      <div class="legend-group">
+        <span class="legend-icon-svg">
+          <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="16" height="16" fill="#95817B" fill-opacity="0.8" stroke="#d32f2f" stroke-width="2"/>
+          </svg>
+        </span>
+        <span class="legend-text">комплексный</span>
+      </div>
+      <div class="legend-group"><span class="legend-text">ПАМЯТНИКИ ПРИРОДЫ</span></div>
+      <div class="legend-group"><span class="legend-text">геологические</span></div>
+      <div class="legend-group-2" style="margin-left:20px;">
+        <span class="legend-icon-img"><img src="icons/massiv.svg" alt="Карстовый массив" width="24" height="24"></span>
+        <span class="legend-text">карстовые массивы</span>
+      </div>
+      <div class="legend-group-2" style="margin-left:20px;">
+        <span class="legend-icon-img"><img src="icons/peshera.svg" alt="Пещеры" width="24" height="24"></span>
+        <span class="legend-text">пещеры</span>
+      </div>
+    </div>
+  </div>
 </div>
 
-  <div class="legend-group">
-    <span class="legend-text">ПАМЯТНИКИ ПРИРОДЫ</span>
-  </div>
-
-  <div class="legend-group">
-    <span class="legend-text">геологические</span>
-  </div>
-
-  <div class="legend-group-2" style="margin-left:20px;">
-    <span class="legend-icon-img">
-      <img src="icons/massiv.svg" alt="Карстовый массив" width="24" height="24">
-    </span>
-    <span class="legend-text">карстовые массивы</span>
-  </div>
-
-  <div class="legend-group-2" style="margin-left:20px;">
-    <span class="legend-icon-img">
-      <img src="icons/peshera.svg" alt="Пещеры" width="24" height="24">
-    </span>
-    <span class="legend-text">пещеры</span>
-  </div>
-</div>
-  </div>
-
-
-</main>
 
 
 <footer>
@@ -1043,6 +1193,16 @@ function showOoptDetails(data) {
   allowedBlock.style.display = allowed.length > 0 ? '' : 'none';
 
   document.getElementById('oopt-details-panel').classList.remove('closed');
+}
+
+// Переключение легенды на мобильных
+const legendToggle = document.getElementById('legendToggle');
+const legendContainer = document.getElementById('legendContainer');
+
+if (legendToggle && legendContainer) {
+  legendToggle.addEventListener('click', function() {
+    legendContainer.classList.toggle('show');
+  });
 }
 
 
