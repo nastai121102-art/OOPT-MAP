@@ -38,7 +38,6 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-
 .fullscreen-btn {
   background: rgba(255,255,255,0.9);
   border: 1px solid rgba(0,0,0,0.1);
@@ -58,7 +57,6 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-
     /* Затемнение фона при открытом меню */
 .overlay {
   position: fixed;
@@ -76,7 +74,7 @@
 
 /* Чтобы карта не перекрывалась, а меню было чётко сверху */
 #map-wrapper {
-  z-index: 1; /* оставляем как есть */
+  z-index: 1;
 }
 
     :root {
@@ -170,18 +168,16 @@
       flex-direction: column;
       gap: 4px;
     }
-    
     .hamburger-line { width: 22px; height: 2px; background-color: var(--primary); }
     .hamburger-btn.active .hamburger-line:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
     .hamburger-btn.active .hamburger-line:nth-child(2) { opacity: 0; }
     .hamburger-btn.active .hamburger-line:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
 
-    
     /* Боковое меню */
 .sidebar-menu {
   position: fixed;
   top: 0;
-  right: -320px; /* Увеличиваем смещение */
+  right: -320px;
   width: 300px;
   max-height: calc(100vh - 20px);
   background: #fff;
@@ -193,15 +189,13 @@
   flex-direction: column;
   gap: 24px;
   overflow-y: auto;
-  
-  /* Добавляем это: */
-  transform: translateX(100%); /* Дополнительное смещение */
-  backface-visibility: hidden; /* Для плавной анимации */
+  transform: translateX(100%);
+  backface-visibility: hidden;
 }
 
 .sidebar-menu.open {
   right: 0;
-  transform: translateX(0); /* Возвращаем на место при открытии */
+  transform: translateX(0);
 }
 
     .sidebar-menu h3 { margin: 0 0 16px 0; color: var(--primary); font-size: 1.3rem; }
@@ -390,7 +384,8 @@
       stroke-width: 3px !important;
     }
 
-      .legend-container {
+    /* === Легенда (как на странице Пинежского района) === */
+    .legend-container {
       position: absolute;
       bottom: 20px;
       left: 20px;
@@ -401,31 +396,28 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       border: 1px solid #e0e0e0;
       max-width: 250px;
-      max-height: 250px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      pointer-events: auto;
     }
 
-
-.legend-toggle {
-  display: none;
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  z-index: 1001;
-  background: rgba(255, 255, 255, 0.98);
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  padding: 10px 14px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  color: #2c5aa0;
-  align-items: center;
-  gap: 8px;
-  transition: background 0.2s ease;
-}
+    .legend-toggle {
+      display: none;
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1001;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: #2c5aa0;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease;
+    }
 
     .legend-title {
       margin: 0 0 12px 0;
@@ -452,7 +444,7 @@
       margin-bottom: 6px;
       font-size: 13px;
       color: #444;
-    }  
+    }
     .legend-group-2 {
       display: flex;
       align-items: center;
@@ -505,17 +497,19 @@
       object-fit: contain;
     }
 
+    /* === Мобильные стили === */
     @media (max-width: 768px) {
-      .legend-toggle {
-      display: flex;
-    }
+      #map-wrapper { height: 420px; }
+      .hero h2 { font-size: 1.7rem; }
+      .features { grid-template-columns: 1fr; }
+      .sidebar-menu { width: 80%; right: -80%; }
+      .sidebar-menu.open { right: 0; }
+      .oopt-panel { width: calc(100% - 40px); }
 
-      /* === Легенда на мобильных === */
+      /* Легенда на мобильных */
       .legend-toggle {
         display: flex;
       }
-
-      
       .legend-container {
         display: none;
         position: absolute;
@@ -533,6 +527,7 @@
     }
 
   </style>
+
 </head>
 <body>
   <div class="overlay" id="overlay"></div>
@@ -1788,25 +1783,52 @@ document.addEventListener('click', function(e) {
   if (e.target.closest('#exit-fs-btn')) toggleMapFullscreen();
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Получаем элементы
-    const legendToggle = document.getElementById('legendToggle');
-    const legendContainer = document.querySelector('.legend-container');
-    
-    // Добавляем обработчик клика
-    legendToggle.addEventListener('click', function() {
-        legendContainer.classList.toggle('show');
-    });
-
-    // Для мобильных устройств добавляем дополнительное условие
-    if (window.innerWidth <= 768) {
-        legendToggle.style.display = 'flex'; // Убедимся, что кнопка видна
+// Легенда — вешаем обработчик сразу, без DOMContentLoaded
+(function() {
+    function setupLegend() {
+        const legendToggle = document.getElementById('legendToggle');
+        const legendContainer = document.querySelector('.legend-container');
+        if (!legendToggle || !legendContainer) {
+            setTimeout(setupLegend, 100);
+            return;
+        }
+        legendToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            legendContainer.classList.toggle('show');
+        });
     }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupLegend);
+    } else {
+        setupLegend();
+    }
+
+
+    // Добавляем обработчик для закрытия при клике вне легенды
+    document.addEventListener('click', function(event) {
+        if (!legendContainer.contains(event.target) && 
+            !legendToggle.contains(event.target) && 
+            legendContainer.classList.contains('show')) {
+            legendContainer.classList.remove('show');
+        }
+    });
 });
 
 
-
-
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const legendToggle = document.getElementById('legendToggle');
+    const legendContainer = document.querySelector('.legend-container');
+    
+    if (legendToggle && legendContainer) {
+        legendToggle.addEventListener('click', function() {
+            legendContainer.classList.toggle('show');
+        });
+    }
+});
+</script>
+
 </body>
 </html>
