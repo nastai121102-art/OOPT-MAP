@@ -390,15 +390,43 @@
       stroke-width: 3px !important;
     }
 
-    /* === Легенда === */
-    .legend-container {
-      margin-top: 20px;
+      .legend-container {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
       padding: 12px;
       background: rgba(255, 255, 255, 0.98);
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       border: 1px solid #e0e0e0;
+      max-width: 250px;
+      max-height: 250px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
+
+
+.legend-toggle {
+  display: none;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1001;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c5aa0;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease;
+}
+
     .legend-title {
       margin: 0 0 12px 0;
       font-size: 14px;
@@ -477,14 +505,34 @@
       object-fit: contain;
     }
 
-    @media (max-width: 768px) {
+       @media (max-width: 768px) {
       #map-wrapper { height: 420px; }
       .hero h2 { font-size: 1.7rem; }
       .features { grid-template-columns: 1fr; }
       .sidebar-menu { width: 80%; right: -80%; }
       .sidebar-menu.open { right: 0; }
       .oopt-panel { width: calc(100% - 40px); }
+
+      /* === Легенда на мобильных === */
+      .legend-toggle {
+        display: flex;
+      }
+      .legend-container {
+        display: none;
+        position: absolute;
+        bottom: 70px;
+        left: 20px;
+        right: 20px;
+        max-width: none;
+        max-height: 320px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .legend-container.show {
+        display: block;
+      }
     }
+
   </style>
 </head>
 <body>
@@ -542,49 +590,20 @@
     <span class="hamburger-line"></span>
     <span class="hamburger-line"></span>
   </button>
+  
+ <!-- Кнопка переключения легенды (видна на мобильных) -->
+      <button class="legend-toggle" id="legendToggle" aria-label="Показать/скрыть легенду">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="9" y1="3" x2="9" y2="21"/>
+        </svg>
+        <span>Легенда</span>
+      </button>
 
-</div>
-    
-    </div>
 
-    <div class="sidebar-menu">
-      <button class="close-menu-btn">&times;</button>
-      <h3>Разделы проекта</h3>
-      <a href="#map-section">Карта ООПТ</a>
-      <a href="/about.html">О проекте</a>
-      <a href="/rules.html">Правила посещения ООПТ</a>
-      <a href="/contacts.html">Контакты</a>
 
-      <div class="menu-basemap-section">
-        <h4>Подложка карты</h4>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input type="radio" name="basemap" value="osm" class="radio-input" checked onchange="switchBaseLayer('osm')">
-            <span class="radio-text">OSM Streets</span>
-          </label>
-
-           <label class="radio-label">
-            <input type="radio" name="basemap" value="topo" class="radio-input" onchange="switchBaseLayer('topo')">
-            <span class="radio-text">OpenTopoMap</span>
-          </label>
-
-          <label class="radio-label">
-            <input type="radio" name="basemap" value="google" class="radio-input" onchange="switchBaseLayer('google')">
-            <span class="radio-text">Google Satellite</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="menu-basemap-section">
-        <h4>Управление слоями: фильтр по статусу</h4>
-        <div style="border-top:1px solid #eee; padding-top:10px;">
-          <button id="btn-federal" class="filter-btn active" style="width:100%; margin-bottom:6px;">Федеральные ООПТ</button>
-          <button id="btn-regional" class="filter-btn active" style="width:100%; margin-bottom:6px;">Региональные ООПТ</button>
-          <button id="btn-local" class="filter-btn active" style="width:100%;">Местные ООПТ</button>
-        </div>
-      </div>
-
-      <!-- === ЛЕГЕНДА === -->
+  <!-- === ЛЕГЕНДА === -->
       <div class="legend-container">
         <h4 class="legend-title">Условные обозначения</h4>
 
@@ -807,6 +826,47 @@
 
       </div>
     </div>
+</div>
+    
+    </div>
+
+    <div class="sidebar-menu">
+      <button class="close-menu-btn">&times;</button>
+      <h3>Разделы проекта</h3>
+      <a href="#map-section">Карта ООПТ</a>
+      <a href="/about.html">О проекте</a>
+      <a href="/rules.html">Правила посещения ООПТ</a>
+      <a href="/contacts.html">Контакты</a>
+
+      <div class="menu-basemap-section">
+        <h4>Подложка карты</h4>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="basemap" value="osm" class="radio-input" checked onchange="switchBaseLayer('osm')">
+            <span class="radio-text">OSM Streets</span>
+          </label>
+
+           <label class="radio-label">
+            <input type="radio" name="basemap" value="topo" class="radio-input" onchange="switchBaseLayer('topo')">
+            <span class="radio-text">OpenTopoMap</span>
+          </label>
+
+          <label class="radio-label">
+            <input type="radio" name="basemap" value="google" class="radio-input" onchange="switchBaseLayer('google')">
+            <span class="radio-text">Google Satellite</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="menu-basemap-section">
+        <h4>Управление слоями: фильтр по статусу</h4>
+        <div style="border-top:1px solid #eee; padding-top:10px;">
+          <button id="btn-federal" class="filter-btn active" style="width:100%; margin-bottom:6px;">Федеральные ООПТ</button>
+          <button id="btn-regional" class="filter-btn active" style="width:100%; margin-bottom:6px;">Региональные ООПТ</button>
+          <button id="btn-local" class="filter-btn active" style="width:100%;">Местные ООПТ</button>
+        </div>
+      </div>
+
   </section>
 
   <section class="popular">
@@ -1729,6 +1789,16 @@ document.addEventListener('click', function(e) {
   if (e.target.closest('#exit-fs-btn')) toggleMapFullscreen();
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+  const legendToggle = document.getElementById('legendToggle');
+  const legendContainer = document.getElementById('legendContainer');
+  
+  if (legendToggle && legendContainer) {
+    legendToggle.addEventListener('click', function() {
+      legendContainer.classList.toggle('show');
+    });
+  }
+});
 
 
 
