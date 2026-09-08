@@ -1789,19 +1789,21 @@ document.addEventListener('click', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  const legendToggle = document.getElementById('legendToggle');
-  const legendContainer = document.getElementById('legendContainer');
-
-legendToggle.addEventListener('click', function() {
+    // Получаем элементы
+    const legendToggle = document.getElementById('legendToggle');
+    const legendContainer = document.querySelector('.legend-container');
+    
+    // Добавляем обработчик клика
+    legendToggle.addEventListener('click', function() {
         legendContainer.classList.toggle('show');
     });
 
-  if (legendToggle && legendContainer) {
-    legendToggle.addEventListener('click', function() {
-      legendContainer.classList.toggle('show');
-    });
-  }
+    // Для мобильных устройств добавляем дополнительное условие
+    if (window.innerWidth <= 768) {
+        legendToggle.style.display = 'flex'; // Убедимся, что кнопка видна
+    }
 });
+
 
 
 
