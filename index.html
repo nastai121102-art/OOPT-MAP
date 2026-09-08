@@ -1791,7 +1791,11 @@ document.addEventListener('click', function(e) {
 document.addEventListener('DOMContentLoaded', function() {
   const legendToggle = document.getElementById('legendToggle');
   const legendContainer = document.getElementById('legendContainer');
-  
+
+legendToggle.addEventListener('click', function() {
+        legendContainer.classList.toggle('show');
+    });
+
   if (legendToggle && legendContainer) {
     legendToggle.addEventListener('click', function() {
       legendContainer.classList.toggle('show');
