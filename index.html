@@ -385,50 +385,75 @@
     }
 
     /* === Легенда (как на странице Пинежского района) === */
-    .legend-container {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      z-index: 1000;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.98);
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      border: 1px solid #e0e0e0;
-      max-width: 250px;
-      pointer-events: auto;
-    }
+/* === Легенда (как на странице Пинежского района) === */
+.legend-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+    max-width: 250px;
+    pointer-events: auto;
+    
+    /* Добавляем прокрутку */
+    max-height: 250px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
-    .legend-toggle {
-      display: none;
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      z-index: 1001;
-      background: rgba(255, 255, 255, 0.98);
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      padding: 10px 14px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      color: #2c5aa0;
-      align-items: center;
-      gap: 8px;
-      transition: background 0.2s ease;
-    }
+/* Стили для скроллбара */
+.legend-container::-webkit-scrollbar {
+    width: 8px;
+}
 
-    .legend-title {
-      margin: 0 0 12px 0;
-      font-size: 14px;
-      color: #2c5aa0;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 8px;
-    }
+.legend-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+
+.legend-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.4);
+    border-radius: 10px;
+}
+
+.legend-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.6);
+}
+
+.legend-toggle {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c5aa0;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s ease;
+}
+
+.legend-title {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #2c5aa0;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
     .legend-section-title {
       margin: 12px 0 8px 0;
       font-size: 12px;
@@ -499,18 +524,19 @@
 
     /* === Мобильные стили === */
     @media (max-width: 768px) {
-      #map-wrapper { height: 420px; }
-      .hero h2 { font-size: 1.7rem; }
-      .features { grid-template-columns: 1fr; }
-      .sidebar-menu { width: 80%; right: -80%; }
-      .sidebar-menu.open { right: 0; }
-      .oopt-panel { width: calc(100% - 40px); }
+    #map-wrapper { height: 420px; }
+    .hero h2 { font-size: 1.7rem; }
+    .features { grid-template-columns: 1fr; }
+    .sidebar-menu { width: 80%; right: -80%; }
+    .sidebar-menu.open { right: 0; }
+    .oopt-panel { width: calc(100% - 40px); }
 
-      /* Легенда на мобильных */
-      .legend-toggle {
+    /* Легенда на мобильных */
+    .legend-toggle {
         display: flex;
-      }
-      .legend-container {
+    }
+    
+    .legend-container {
         display: none;
         position: absolute;
         bottom: 70px;
@@ -520,11 +546,12 @@
         max-height: 320px;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-      }
-      .legend-container.show {
-        display: block;
-      }
     }
+    
+    .legend-container.show {
+        display: block;
+    }
+}
 
   </style>
 
