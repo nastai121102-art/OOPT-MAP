@@ -505,18 +505,17 @@
       object-fit: contain;
     }
 
-       @media (max-width: 768px) {
-      #map-wrapper { height: 420px; }
-      .hero h2 { font-size: 1.7rem; }
-      .features { grid-template-columns: 1fr; }
-      .sidebar-menu { width: 80%; right: -80%; }
-      .sidebar-menu.open { right: 0; }
-      .oopt-panel { width: calc(100% - 40px); }
+    @media (max-width: 768px) {
+      .legend-toggle {
+      display: flex;
+    }
 
       /* === Легенда на мобильных === */
       .legend-toggle {
         display: flex;
       }
+
+      
       .legend-container {
         display: none;
         position: absolute;
